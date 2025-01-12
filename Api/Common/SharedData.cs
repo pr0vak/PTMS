@@ -14,4 +14,29 @@ public static class SharedData
             get => [Administrator, ProjectManager, TeamMember, Guest];
         }
     }
+
+    public static class Priorities
+    {
+        public const string Low = "low";
+        public const string Medium = "medium";
+        public const string High = "high";
+
+        public static IReadOnlyList<string> AllPriorities
+        {
+            get => [Low, Medium, High];
+        }
+    }
+
+    public static class Status
+    {
+        public const string InProgress = "in_progress";
+        public const string Running = "running";
+        public const string Suspended = "suspended";
+        public const string Completed = "Completed";
+
+        public static IReadOnlyList<string> AllPriorities
+        {
+            get => [InProgress, Running, Suspended, Completed];
+        }
+    }
 }

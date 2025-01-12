@@ -24,8 +24,7 @@ public class JwtTokenGenerator
         {
             Subject = new ClaimsIdentity(
             [
-                new Claim("FirstName", appUser.FirstName),
-                new Claim("LastName", appUser.LastName),
+                new Claim("FullName", appUser.FullName),
                 new Claim("id", appUser.Id),
                 new Claim(ClaimTypes.Email, appUser.Email),
                 new Claim(ClaimTypes.Role, string.Join(",", roles))
