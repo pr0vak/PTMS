@@ -1,7 +1,10 @@
 using Api.Extensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog();
+builder.Services.AddSerilogLogging();
 builder.Services.AddFluentValidation();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -22,6 +25,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+
+app.UseRouting();
 app.MapControllers();
 app.UseHttpsRedirection();
 
