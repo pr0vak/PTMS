@@ -26,4 +26,6 @@ public class Todo
     public AppUser Assignee { get; set; }
     [ForeignKey("ProjectId")]
     public Project Project { get; set; }
+
+    public ICollection<CommentsTodo> CommentsTodo { get; set; }
 }

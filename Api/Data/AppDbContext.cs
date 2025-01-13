@@ -9,6 +9,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Team> Teams { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<Todo> Todos { get; set; }
+    public DbSet<CommentsTodo> CommentsTodos { get; set; }
 
     public AppDbContext(DbContextOptions options) : base(options)
     {
