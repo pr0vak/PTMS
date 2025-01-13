@@ -7,10 +7,7 @@ namespace Api.Controllers;
 [Route("api/[controller]/[Action]")]
 public class BaseController : ControllerBase
 {
-    protected readonly AppDbContext dbContext;
-
-    public BaseController(AppDbContext dbContext)
+    public BaseController()
     {
-        this.dbContext = dbContext;
     }
 }

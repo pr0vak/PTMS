@@ -11,21 +11,15 @@ namespace Api.Controllers;
 
 public class AuthController : BaseController
 {
-    private readonly UserManager<AppUser> userManager;
-    private readonly RoleManager<IdentityRole> roleManager;
-    private readonly JwtTokenGenerator jwtTokenGenerator;
+    private readonly IAccountService accountService;
     private readonly IValidator<RegisterDto> regValidator;
     private readonly IValidator<LoginDto> logValidator;
     private readonly ILogger<AuthController> logger;
 
-    public AuthController(AppDbContext dbContext, UserManager<AppUser> userManager,
-        RoleManager<IdentityRole> roleManager, JwtTokenGenerator jwtTokenGenerator,
-        IValidator<RegisterDto> regValidator, IValidator<LoginDto> logValidator,
-        ILogger<AuthController> logger) : base(dbContext)
+    public AuthController(IAccountService accountService, ILogger<AuthController> logger,
+        IValidator<RegisterDto> regValidator, IValidator<LoginDto> logValidator)
     {
-        this.userManager = userManager;
-        this.roleManager = roleManager;
-        this.jwtTokenGenerator = jwtTokenGenerator;
+        this.accountService = accountService;
         this.regValidator = regValidator;
         this.logValidator = logValidator;
         this.logger = logger;
@@ -47,7 +41,7 @@ public class AuthController : BaseController
             });
         }
 
-        return await RegisterService.Register(registerDto, dbContext, userManager);
+        return await accountService.Register(registerDto);
     }
 
     [HttpPost]
@@ -66,6 +60,6 @@ public class AuthController : BaseController
             });
         }
 
-        return await LoginService.Login(loginDto, dbContext, userManager, jwtTokenGenerator);
+        return await accountService.Login(loginDto);
     }
 }

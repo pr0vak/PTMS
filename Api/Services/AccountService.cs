@@ -9,10 +9,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services;
 
-public static class RegisterService
+public class AccountService : IAccountService
 {
-    public static async Task<ActionResult<ServerResponse>> Register(RegisterDto registerDto,
-        AppDbContext dbContext, UserManager<AppUser> userManager)
+    private readonly AppDbContext dbContext;
+    private readonly UserManager<AppUser> userManager;
+    private readonly RoleManager<IdentityRole> roleManager;
+    private readonly JwtTokenGenerator jwtTokenGenerator;
+
+    public AccountService(AppDbContext dbContext, UserManager<AppUser> userManager,
+        RoleManager<IdentityRole> roleManager, JwtTokenGenerator jwtTokenGenerator)
+    {
+        this.dbContext = dbContext;
+        this.userManager = userManager;
+        this.roleManager = roleManager;
+        this.jwtTokenGenerator = jwtTokenGenerator;
+    }
+
+    public async Task<ActionResult<ServerResponse>> Register(RegisterDto registerDto)
     {
         var userFromDb = await dbContext.Users.FirstOrDefaultAsync(u =>
             u.NormalizedEmail.Equals(registerDto.Email.ToUpper()));
@@ -54,6 +67,35 @@ public static class RegisterService
         {
             StatusCode = HttpStatusCode.OK,
             Result = "Registration successful"
+        });
+    }
+
+    public async Task<ActionResult<ServerResponse>> Login(LoginDto loginDto)
+    {
+        var userFromDb = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.NormalizedEmail.Equals(loginDto.Email.ToUpper()));
+
+        if (userFromDb is null || !await userManager.CheckPasswordAsync(userFromDb, loginDto.Password))
+        {
+            return new BadRequestObjectResult(new ServerResponse
+            {
+                IsSuccess = false,
+                StatusCode = HttpStatusCode.BadRequest,
+                ErrorMessages = { "Incorrect login and/or password" }
+            });
+        }
+
+        var roles = await userManager.GetRolesAsync(userFromDb);
+        var token = jwtTokenGenerator.GenerateJwtToken(userFromDb, roles);
+
+        return new OkObjectResult(new ServerResponse
+        {
+            StatusCode = HttpStatusCode.OK,
+            Result = new LoginResponseDto
+            {
+                Email = userFromDb.Email,
+                Token = token
+            }
         });
     }
 
