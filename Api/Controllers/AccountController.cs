@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class AuthController : BaseController
+public class AccountController : BaseController
 {
     private readonly IAccountService accountService;
     private readonly IValidator<RegisterDto> regValidator;
     private readonly IValidator<LoginDto> logValidator;
-    private readonly ILogger<AuthController> logger;
+    private readonly ILogger<AccountController> logger;
 
-    public AuthController(IAccountService accountService, ILogger<AuthController> logger,
+    public AccountController(IAccountService accountService, ILogger<AccountController> logger,
         IValidator<RegisterDto> regValidator, IValidator<LoginDto> logValidator)
     {
         this.accountService = accountService;
